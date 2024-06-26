@@ -1,19 +1,21 @@
 // script.js
-
+const maxL = 15; // Máximo nivel posible
+let level = 0;
 let sequence = [];
 let playerSequence = [];
-let level = 0;
-
-// Tiempo base en milisegundos
-let baseTime = 600;
-// Máximo de niveles
-const maxLevel = 5;
 
 const startButton = document.getElementById('start-button');
-const messageElement = document.getElementById('message');
+const levelInput = document.getElementById('level-input');
+const modal = document.getElementById('modal');
+const modalMessage = document.getElementById('modal-message');
+const modalButton = document.getElementById('modal-button');
 const colorButtons = document.querySelectorAll('.color-button');
+const messageElement = document.getElementById('message');
+
+
 
 startButton.addEventListener('click', startGame);
+modalButton.addEventListener('click', closeModal);
 
 colorButtons.forEach(button => {
     button.addEventListener('click', (e) => {
@@ -24,45 +26,22 @@ colorButtons.forEach(button => {
     });
 });
 
-function startGame() {
-    level = 0;
-    sequence = [];
-    playerSequence = [];
-    messageElement.textContent = '';
-    baseTime = 600;  // Reinicia el tiempo base al comenzar un nuevo juego
-    nextRound();
-}
-
-function nextRound() {
-    if (level >= maxLevel) {
-        messageElement.textContent = 'You Win!!! Congratulations!!';
-        setTimeout(()=>{
-			resetGame();
-		},3000);
-		alert('You Win!!! Congratulations!');
-        return;
-    }
-    playerSequence = [];
-    level++;
-    messageElement.textContent = `Level ${level}`;
-    const nextColor = getRandomColor();
-    sequence.push(nextColor);
-    playSequence();
-}
-
-function resetGame() {
-    level = 0;
-    sequence = [];
-    playerSequence = [];
-    baseTime = 600;
-    messageElement.textContent = '';
-}
-
 function getRandomColor() {
     const colors = ['green', 'red', 'yellow', 'blue'];
     return colors[Math.floor(Math.random() * colors.length)];
 }
-
+function startGame() {
+	maxLevel = parseInt(levelInput.value);
+	if (maxLevel < 2 || maxLevel > maxLevel) {
+        alert(`Por favor, selecciona un número entre 2 y ${maxL}.`);
+        return;
+    }
+	sequence = [];
+    playerSequence = [];
+    messageElement.textContent = 'Starting';
+    baseTime = 600;  // Reinicia el tiempo base al comenzar un nuevo juego
+    nextRound();
+}
 function playSequence() {
     let delay = 0;
     const activationTime = baseTime / 2;  // El tiempo de activación es la mitad del tiempo base
@@ -87,12 +66,52 @@ function flashButton(color, activationTime) {
 function checkPlayerMove() {
     const currentMoveIndex = playerSequence.length - 1;
     if (playerSequence[currentMoveIndex] !== sequence[currentMoveIndex]) {
-        alert('Game Over! Try Again!');
-		resetGame();
+        youLose();
         return;
     }
 
     if (playerSequence.length === sequence.length) {
         setTimeout(nextRound, 1000);
     }
+}
+
+function nextRound() {
+    if (level >= maxLevel) {
+		youWin();
+        return;
+    }
+    playerSequence = [];
+    level++;
+    messageElement.textContent = `Level ${level}`;
+    const nextColor = getRandomColor();
+    sequence.push(nextColor);
+    playSequence();
+}
+
+function youWin() {
+	modalMessage.textContent = 'You Win!!! Congratulations!!';
+	messageElement.textContent = 'You Win!!! Congratulations!!';
+	openModal();
+}
+function youLose() {        
+	modalMessage.textContent = 'Game Over! Try Again!';
+	messageElement.textContent = 'Game Over! Try Again!';
+	openModal();
+	return;
+}
+function openModal() {
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+    resetGame();
+}
+
+function resetGame() {
+    level = 0;
+    sequence = [];
+    playerSequence = [];
+    baseTime = 600;
+    messageElement.textContent = '';
 }
