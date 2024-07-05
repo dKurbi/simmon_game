@@ -11,6 +11,9 @@ const modalMessage = document.getElementById('modal-message');
 const modalButton = document.getElementById('modal-button');
 const colorButtons = document.querySelectorAll('.color-button');
 const messageElement = document.getElementById('message');
+const messageWin = 'Ganaste! Felicitaciones!';
+const messageLose = 'Perdiste! Intenta nuevamente!'
+
 
 // Cargar sonidos
 const sounds = {
@@ -104,14 +107,14 @@ function nextRound() {
 
 function youWin() {
 	playSound('win');
-	modalMessage.textContent = 'You Win!!! Congratulations!!';
-	messageElement.textContent = 'You Win!!! Congratulations!!';
+	modalMessage.textContent = messageWin;
+	messageElement.textContent = messageWin;
 	openModal();
 }
 function youLose() {
 	playSound('lose');
-    modalMessage.textContent = 'Game Over! Try Again!';
-	messageElement.textContent = 'Game Over! Try Again!';
+    modalMessage.textContent = messageLose;
+	messageElement.textContent = messageLose;
 	openModal();
 	return;
 }
