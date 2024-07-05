@@ -48,6 +48,7 @@ function startGame() {
         alert(`Por favor, selecciona un número entre 2 y ${maxL}.`);
         return;
     }
+	level = 0;
 	sequence = [];
     playerSequence = [];
     messageElement.textContent = 'Starting';
