@@ -12,6 +12,15 @@ const modalButton = document.getElementById('modal-button');
 const colorButtons = document.querySelectorAll('.color-button');
 const messageElement = document.getElementById('message');
 
+// Cargar sonidos
+const sounds = {
+    green: new Audio('sounds/green.mp3'),
+    red: new Audio('sounds/red.mp3'),
+    yellow: new Audio('sounds/yellow.mp3'),
+    blue: new Audio('sounds/blue.mp3'),
+	win: new Audio('sounds/win.mp3'),
+	lose: new Audio('sounds/lose.mp3')
+};
 
 
 startButton.addEventListener('click', startGame);
@@ -48,7 +57,7 @@ function playSequence() {
     sequence.forEach((color, index) => {
         setTimeout(() => {
             flashButton(color, activationTime);
-        }, delay);
+			}, delay);
         delay += baseTime;  // Usa el tiempo base para espaciar los botones en la secuencia
     });
     // Reduce el tiempo base en un 10% para el próximo nivel
@@ -58,11 +67,16 @@ function playSequence() {
 function flashButton(color, activationTime) {
     const button = document.getElementById(color);
     button.classList.add('active');
+	playSound(color);
     setTimeout(() => {
         button.classList.remove('active');
     }, activationTime);
 }
 
+function playSound(event) {
+    sounds[event].currentTime = 0;  // Rewind to the start
+    sounds[event].play();
+}
 function checkPlayerMove() {
     const currentMoveIndex = playerSequence.length - 1;
     if (playerSequence[currentMoveIndex] !== sequence[currentMoveIndex]) {
@@ -89,12 +103,14 @@ function nextRound() {
 }
 
 function youWin() {
+	playSound('win');
 	modalMessage.textContent = 'You Win!!! Congratulations!!';
 	messageElement.textContent = 'You Win!!! Congratulations!!';
 	openModal();
 }
-function youLose() {        
-	modalMessage.textContent = 'Game Over! Try Again!';
+function youLose() {
+	playSound('lose');
+    modalMessage.textContent = 'Game Over! Try Again!';
 	messageElement.textContent = 'Game Over! Try Again!';
 	openModal();
 	return;
